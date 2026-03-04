@@ -8,6 +8,7 @@ find_package(Eigen3 REQUIRED)
 add_executable(kalman-mower
     src/main.cpp
     src/data_generator.cpp
+    src/ekf.cpp
 )
 
 target_include_directories(kalman-mower PRIVATE src)

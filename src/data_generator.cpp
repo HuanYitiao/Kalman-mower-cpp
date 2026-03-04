@@ -2,7 +2,7 @@
 
 DataGenerator::DataGenerator(double dt) : dt(dt), rng(42)  // debug
 {
-    gpsNoiseStd     = 0.3;   // m
+    gpsNoiseStd     = 0.03;  // m
     imuAccNoiseStd  = 0.1;   // m/s^2
     imuGyroNoiseStd = 0.01;  // rad/s
     imuAccBiasStd   = 0.01;
@@ -65,13 +65,13 @@ IMUData DataGenerator::simulateIMU(int step)
 
 GPSData DataGenerator::simulateGPS(int step)
 {
-    // double t         = step * dt;
-    // bool   available = !(t > 6.0 && t < 9.0);
+    double t         = step * dt;
+    bool   available = !(t > 4.0 && t < 9.0);
 
-    // if (!available)
-    // {
-    //     return { 0, 0, false };
-    // }
+    if (!available)
+    {
+        return { 0, 0, false };
+    }
 
     double x = truth[step].x + dist(rng) * gpsNoiseStd;
     double y = truth[step].y + dist(rng) * gpsNoiseStd;
