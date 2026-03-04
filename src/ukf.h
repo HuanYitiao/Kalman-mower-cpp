@@ -1,10 +1,10 @@
 #pragma once
 #include <Eigen/Dense>
 
-class EKF
+class UKF
 {
   public:
-    EKF();
+    UKF();
     void predict(double ax, double omega, double dt);
     void update(double gpsX, double gpsY);
 
@@ -12,4 +12,8 @@ class EKF
     Eigen::Matrix4d P;
     Eigen::Matrix4d Q;
     Eigen::Matrix2d R;
+
+    double alpha;
+    double beta;
+    double kappa;
 };

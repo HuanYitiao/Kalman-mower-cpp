@@ -1,5 +1,6 @@
 #include "data_generator.h"
 #include "ekf.h"
+#include "ukf.h"
 
 #include <fstream>
 #include <sstream>
@@ -61,9 +62,10 @@ int main()
 
     auto rows = readCSV("data/output.csv");
 
+    // EKF ------------------------------------
     EKF           ekf;
-    std::ofstream out("data/ekf_output.csv");
-    out << "t,true_x,true_y,true_yaw,gps_x,gps_y,est_x,est_y,est_yaw\n";
+    std::ofstream out_ekf("data/ekf_output.csv");
+    out_ekf << "t,true_x,true_y,true_yaw,gps_x,gps_y,est_x,est_y,est_yaw\n";
 
     for (int i = 1; i < rows.size(); i++)
     {
@@ -74,10 +76,32 @@ int main()
             ekf.update(rows[i].gps_x, rows[i].gps_y);
         }
 
-        out << rows[i].t << "," << rows[i].true_x << "," << rows[i].true_y << "," << rows[i].true_yaw << ","
-            << rows[i].gps_x << "," << rows[i].gps_y << "," << ekf.x(0) << "," << ekf.x(1) << "," << ekf.x(2) << "\n";
+        out_ekf << rows[i].t << "," << rows[i].true_x << "," << rows[i].true_y << "," << rows[i].true_yaw << ","
+                << rows[i].gps_x << "," << rows[i].gps_y << "," << ekf.x(0) << "," << ekf.x(1) << "," << ekf.x(2)
+                << "\n";
     }
 
-    out.close();
+    out_ekf.close();
+
+    // UKF ------------------------------------
+    UKF           ukf;
+    std::ofstream out_ukf("data/ukf_output.csv");
+    out_ukf << "t,true_x,true_y,true_yaw,gps_x,gps_y,est_x,est_y,est_yaw\n";
+
+    for (int i = 1; i < rows.size(); i++)
+    {
+        ukf.predict(rows[i].imu_ax, rows[i].imu_omega, dt);
+
+        if (i % 10 == 0 && rows[i].gps_available)
+        {
+            ukf.update(rows[i].gps_x, rows[i].gps_y);
+        }
+
+        out_ukf << rows[i].t << "," << rows[i].true_x << "," << rows[i].true_y << "," << rows[i].true_yaw << ","
+                << rows[i].gps_x << "," << rows[i].gps_y << "," << ukf.x(0) << "," << ukf.x(1) << "," << ukf.x(2)
+                << "\n";
+    }
+
+    out_ukf.close();
     return 0;
 }

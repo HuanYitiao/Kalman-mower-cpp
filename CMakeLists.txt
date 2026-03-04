@@ -9,6 +9,7 @@ add_executable(kalman-mower
     src/main.cpp
     src/data_generator.cpp
     src/ekf.cpp
+    src/ukf.cpp
 )
 
 target_include_directories(kalman-mower PRIVATE src)
