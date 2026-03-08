@@ -239,11 +239,11 @@ kalman-mower/
 ├── README.md
 ├── run.sh
 ├── src/
-│   ├── main.cpp              # Data generation + EKF/UKF loop
-│   ├── data_generator.h/cpp  # Trajectory and sensor simulation
-│   ├── ekf.h/cpp             # Extended Kalman Filter
-│   └── ukf.h/cpp             # Unscented Kalman Filter
+│   ├── main.cpp
+│   ├── data_generator.h/cpp
+│   ├── ekf.h/cpp
+│   └── ukf.h/cpp
 ├── scripts/
-│   └── plot.py               # Visualization
-└── data/                     # Generated at runtime (gitignored)
+│   └── plot.py
+└── data/
 ```
