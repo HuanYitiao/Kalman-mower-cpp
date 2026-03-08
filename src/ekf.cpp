@@ -22,15 +22,17 @@ void EKF::predict(double ax, double omega, double dt)
 {
     double yaw = x(2);
 
-    x(3) += ax * dt;
-    x(0) += x(3) * std::cos(yaw) * dt;
-    x(1) += x(3) * std::sin(yaw) * dt;
-    x(2) += omega * dt;
+    x(3) += ax * dt;  // v
+
+    double v = x(3);
+    x(0) += v * std::cos(yaw) * dt;  // x
+    x(1) += v * std::sin(yaw) * dt;  // y
+    x(2) += omega * dt;              // yaw
 
     Eigen::Matrix4d F = Eigen::Matrix4d::Identity();
-    F(0, 2)           = -x(3) * std::sin(yaw) * dt;
+    F(0, 2)           = -v * std::sin(yaw) * dt;
     F(0, 3)           = std::cos(yaw) * dt;
-    F(1, 2)           = x(3) * std::cos(yaw) * dt;
+    F(1, 2)           = v * std::cos(yaw) * dt;
     F(1, 3)           = std::sin(yaw) * dt;
 
     P = F * P * F.transpose() + Q;
